@@ -1,0 +1,27 @@
+﻿@page "/todo"
+
+
+
+<h3>TODO List</h3>
+
+<ul>
+    @foreach (var todo in State.Value.Todos)
+    {
+        <li>
+            @todo.Description
+            @if (!todo.IsCompleted)
+            {
+                <FluentButton @onclick="() => MarkComplete(todo.Id)" Appearance="Appearance.Accent">Complete</FluentButton>
+
+            }
+            <FluentButton @onclick="() => DeleteTask(todo.Id)" Appearance="Appearance.Accent">Delete</FluentButton>
+
+        </li>
+    }
+</ul>
+
+<FluentTextField @bind-Value=newTaskDescription placeholder="Add a new task..." AriaLabel="No label"></FluentTextField>
+
+<FluentButton @onclick="AddTask" Add Task="Appearance.Accent">Add</FluentButton>
+
+

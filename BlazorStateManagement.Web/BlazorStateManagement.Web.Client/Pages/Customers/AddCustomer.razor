@@ -1,0 +1,125 @@
+﻿@page "/create-customer"
+
+
+@using BlazorStateManagement.Web.Client.Models
+@using Blazored.FluentValidation
+@using FluentValidation
+@using Fluxor
+@using Fluxor.Blazor.Web.Middlewares.Routing
+@inject IJSRuntime JS
+@inject IDispatcher Dispatcher
+@inject IState<CustomersState> State
+@inherits FluxorComponent
+
+
+<PageTitle>Crear Customer </PageTitle>
+@if (State.Value.IsLoading)
+{
+    <FluentProgressRing></FluentProgressRing>
+
+
+}
+else
+{
+
+    <EditForm EditContext="EditContext" OnValidSubmit="@CreateCustomerMethod">
+        <FluentValidationValidator />
+
+        <h3> <b>Nuevo Customer </b></h3>
+        <br />
+        <div class="form-group mb-3">
+            <label>Nombre<span class="red"> *</span></label>
+            <InputText  @bind-Value="Model.Name"></InputText>
+            <ValidationMessage class="red" For="@(()=> Model.Name)" />
+        </div>
+        <br />
+        <br />
+
+        <div class="form-group mb-3">
+            <label>Email<span class="red"> *</span></label>
+            <InputText  @bind-Value="Model.EmailAddress"></InputText>
+            <ValidationMessage class="red" For="@(()=> Model.EmailAddress)" />
+        </div>
+        <br />
+        <br />
+
+        <div class="form-group mb-3">
+            <label>Notas<span class="red"> *</span></label>
+            <InputTextArea @bind-Value="Model.Notes"></InputTextArea>
+            <ValidationMessage class="red" For="@(()=> Model.Notes)" />
+        </div>
+
+
+
+
+        <FluentButton Appearance="Appearance.Stealth" Class="go-back-button" @onclick="()=>NavigateToList()">Volver</FluentButton>
+        <FluentButton Appearance="Appearance.Accent" Type="ButtonType.Submit">Guardar</FluentButton>
+    </EditForm>
+
+
+
+    <NavigationLock ConfirmExternalNavigation="@(EditContext!.IsModified())"
+                    OnBeforeInternalNavigation="ConfirmInternalNavigation" />
+}
+
+@code {
+
+    private EditContext EditContext = default!;
+    private readonly CreateCustomerFormModel Model = new();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        EditContext = new(Model);
+
+        SubscribeToAction<CreateCustomerSuccessAction>(
+                x =>
+                {
+                    NavigateToList();
+                    Dispatcher.Dispatch(new AddNotificationAction("Se creo nuevo Customer: " + Model.Name));
+
+                });
+
+
+    }
+
+
+    private void CreateCustomerMethod()
+    {
+        Dispatcher.Dispatch(new CreateCustomerAction(Model));
+        EditContext.MarkAsUnmodified();
+    }
+
+    private async Task ConfirmInternalNavigation(LocationChangingContext locationChanging)
+    {
+        if (EditContext.IsModified())
+        {
+            var isConfirmed = await JS.InvokeAsync<bool>("confirm", "Esta saliendo de esta pagina, Es posible que no se guarden los cambios hayas hecho.");
+            if (!isConfirmed)
+            {
+                locationChanging.PreventNavigation();
+            }
+        }
+    }
+
+    private void NavigateToList()
+    {
+        Dispatcher.Dispatch(new GoAction("/customers"));
+    }
+
+    public class CreateCustomerValidator : AbstractValidator<CreateCustomerFormModel>
+    {
+        public CreateCustomerValidator()
+        {
+
+            RuleFor(customer => customer.Name).NotEmpty().WithMessage("El nombre es requerido.");
+            RuleFor(customer => customer.EmailAddress).NotEmpty().EmailAddress().WithMessage("El email es requerido.");
+            RuleFor(customer => customer.Notes).NotEmpty().WithMessage("Las notas son requeridas.");
+
+
+
+        }
+    }
+
+
+}

@@ -1,0 +1,147 @@
+﻿@page "/edit-customer/{Id}"
+
+
+@using BlazorStateManagement.Web.Client.Models
+@using Blazored.FluentValidation
+@using FluentValidation
+@using Fluxor
+@using Fluxor.Blazor.Web.Middlewares.Routing
+@inject IJSRuntime JS
+@inject IDispatcher Dispatcher
+@inject IState<CustomersState> State
+@inherits FluxorComponent
+
+
+<PageTitle>Editar Customer </PageTitle>
+@if ((State.Value.IsLoading || Model is null))
+{
+    <FluentProgressRing></FluentProgressRing>
+
+
+}
+else
+{
+
+    <EditForm EditContext="EditContext" OnValidSubmit="@UpdateCustomerMethod">
+        <FluentValidationValidator />
+
+        <h3> <b>Nuevo Customer </b></h3>
+        <br />
+        <div class="form-group mb-3">
+            <label>Nombre<span class="red"> *</span></label>
+            <InputText @bind-Value="Model.Name"></InputText>
+            <ValidationMessage class="red" For="@(()=> Model.Name)" />
+        </div>
+        <br />
+        <br />
+
+        <div class="form-group mb-3">
+            <label>Email<span class="red"> *</span></label>
+            <InputText @bind-Value="Model.EmailAddress"></InputText>
+            <ValidationMessage class="red" For="@(()=> Model.EmailAddress)" />
+        </div>
+        <br />
+        <br />
+
+        <div class="form-group mb-3">
+            <label>Notas<span class="red"> *</span></label>
+            <InputTextArea @bind-Value="Model.Notes"></InputTextArea>
+            <ValidationMessage class="red" For="@(()=> Model.Notes)" />
+        </div>
+
+
+
+
+        <FluentButton Appearance="Appearance.Stealth" Class="go-back-button" @onclick="()=>NavigateToList()">Volver</FluentButton>
+        <FluentButton Appearance="Appearance.Accent" Type="ButtonType.Submit">Guardar</FluentButton>
+    </EditForm>
+
+
+
+    <NavigationLock ConfirmExternalNavigation="@(EditContext!.IsModified())"
+                    OnBeforeInternalNavigation="ConfirmInternalNavigation" />
+}
+
+@code {
+
+    private EditContext EditContext = default!;
+    private UpdateCustomerFormModel Model = new();
+
+    [Parameter]
+    public string Id { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        SubscribeToAction<GetCustomerByIdSuccessAction>(
+            x =>
+            {
+                Model = new()
+                    {
+                        Id = x.Response.Id,
+                        Name = x.Response.Name,
+                        EmailAddress = x.Response.EmailAddress,
+                        Notes = x.Response.Notes
+                    };
+
+                EditContext = new(Model);
+            });
+
+        SubscribeToAction<UpdateCustomerSuccessAction>(
+            x => 
+            {
+                NavigateToList();
+                Dispatcher.Dispatch(new AddNotificationAction("Se modifico el Customer " + Model.Name));
+
+            });
+
+
+        EditContext = new(Model);
+
+        Dispatcher.Dispatch(new GetCustomerByIdAction(new(new(Id))));
+
+
+    }
+
+
+    private void UpdateCustomerMethod()
+    {
+        Dispatcher.Dispatch(new UpdateCustomerAction(Model));
+        EditContext.MarkAsUnmodified();
+
+    }
+
+    private async Task ConfirmInternalNavigation(LocationChangingContext locationChanging)
+    {
+        if (EditContext.IsModified())
+        {
+            var isConfirmed = await JS.InvokeAsync<bool>("confirm", "Esta saliendo de esta pagina, Es posible que no se guarden los cambios hayas hecho.");
+            if (!isConfirmed)
+            {
+                locationChanging.PreventNavigation();
+            }
+        }
+    }
+
+    private void NavigateToList()
+    {
+        Dispatcher.Dispatch(new GoAction("/customers"));
+    }
+
+    public class UpdateCustomerValidator : AbstractValidator<UpdateCustomerFormModel>
+    {
+        public UpdateCustomerValidator()
+        {
+
+            RuleFor(customer => customer.Name).NotEmpty().WithMessage("El nombre es requerido.");
+            RuleFor(customer => customer.EmailAddress).NotEmpty().EmailAddress().WithMessage("El email es requerido.");
+            RuleFor(customer => customer.Notes).NotEmpty().WithMessage("Las notas son requeridas.");
+
+
+
+        }
+    }
+
+
+}

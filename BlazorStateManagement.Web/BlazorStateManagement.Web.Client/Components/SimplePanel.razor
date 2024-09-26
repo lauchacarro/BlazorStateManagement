@@ -1,0 +1,24 @@
+﻿@using BlazorStateManagement.Store
+@using Fluxor
+@implements IDialogContentComponent
+@inject IState<NotificationsState> State
+
+<FluentDialogBody>
+    <h3>Listado de Notificaciones </h3>
+
+    <FluentDivider Style="width: 100%;" Role="DividerRole.Presentation"></FluentDivider>
+    @foreach (var item in State.Value.Notifications)
+    {
+        <p>@item.Description</p>
+        <FluentDivider Style="width: 100%;" Role="DividerRole.Presentation"></FluentDivider>
+
+    }
+
+
+</FluentDialogBody>
+
+@code {
+
+
+
+}

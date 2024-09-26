@@ -1,0 +1,93 @@
+﻿@page "/customers"
+@using BlazorStateManagement.Models
+@using BlazorStateManagement.Store
+@using Fluxor
+@using Fluxor.Blazor.Web.Middlewares.Routing
+@inherits FluxorComponent
+@inject IDispatcher Dispatcher
+
+@inject IState<CustomersState> State
+<PageTitle>Customers</PageTitle>
+
+<h1>Customers</h1>
+
+
+
+<FluentButton Title="Nuevo" @onclick="NavigateToNewCategory">
+    <FluentIcon Icon="Icons.Regular.Size16.Add" Slot="start" />
+    Nuevo
+</FluentButton>
+
+@if (State.Value.IsLoading)
+{
+    <p><em>Loading...</em></p>
+}
+else if (!State.Value.IsLoading && !State.Value.Customers.Any())
+{
+    <p>No hay clientes.</p>
+}
+else
+{
+    <FluentDataGrid Id="customresgrid" Items="@State.Value.Customers.ToList().AsQueryable()" GridTemplateColumns="1fr 1fr 1fr 2fr" TGridItem="CustomersItem">
+        <PropertyColumn Title="Name" Property="@(c => c!.Name)" Sortable="true" Align="Align.Start" />
+        <PropertyColumn Title="Email" Property="@(c => c!.EmailAddress)" Sortable="true" Align="Align.Center" />
+        <PropertyColumn Title="Notes" Property="@(c => c!.Notes)" Sortable="true" Align="Align.Center" />
+
+        <TemplateColumn Title="Acciones" Class="actions-button">
+            <FluentIcon Icon="Icons.Regular.Size20.DocumentEdit" class="icons" Title="Editar" @onclick="() => NavigateToCustomrEdit(context.Id)" />
+            <FluentIcon Icon="Icons.Regular.Size20.Delete" class="icons" Title="Eliminar" Color="Color.Error" @onclick="() => NavigateToCustomerRemove(context.Id)" />
+        </TemplateColumn>
+    </FluentDataGrid>
+}
+
+@code {
+    private string searchTerm = "";
+
+
+    protected override void OnInitialized()
+    {
+
+        base.OnInitialized();
+        Dispatcher.Dispatch(new SearchCustomersAction(new SearchCustomersRequest(searchTerm)));
+
+        SubscribeToAction<DeleteCustomerSuccessAction>(
+        x =>
+        {
+            Dispatcher.Dispatch(new AddNotificationAction("Se elimino el Customer " + x.Id));
+
+        });
+
+
+    }
+
+    private void SearchCustomers()
+    {
+        Dispatcher.Dispatch(new SearchCustomersAction(new SearchCustomersRequest(searchTerm)));
+    }
+
+    private void SelectCustomer(Guid id)
+    {
+        Dispatcher.Dispatch(new GetCustomerByIdAction(new GetCustomerByIdRequest(id)));
+    }
+
+    private void DeleteCustomer(Guid id)
+    {
+        Dispatcher.Dispatch(new DeleteCustomerAction(new DeleteCustomerRequest(id)));
+    }
+
+    private void NavigateToNewCategory()
+    {
+        Dispatcher.Dispatch(new GoAction("/create-customer"));
+    }
+
+    private void NavigateToCustomrEdit(Guid id)
+    {
+        Dispatcher.Dispatch(new GoAction("/edit-customer/" + id ));
+    }
+
+    private void NavigateToCustomerRemove(Guid id)
+    {
+        Dispatcher.Dispatch(new DeleteCustomerAction(new(id)));
+    }
+
+}

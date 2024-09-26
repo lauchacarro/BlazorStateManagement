@@ -1,0 +1,62 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.34916.146
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. Web", "1. Web", "{058E6899-929B-49DA-B3FD-707077E8C6A6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Api", "2. Api", "{AA339D9E-3D55-468E-A8F5-B52B4CC2C2A6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorStateManagement.Api", "CustomerApi\BlazorStateManagement.Api.csproj", "{2E0AE021-6B50-444B-9638-1CD7BC321B14}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Commons", "3. Commons", "{8CC55CDA-49EB-428C-A5E1-89DF8E210E4C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorStateManagement.Models", "Models\BlazorStateManagement.Models.csproj", "{6C835EDC-8802-4156-833F-79BCA102C99C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorStateManagement.Store", "BlazorStateManagement.Store\BlazorStateManagement.Store.csproj", "{D1734131-3B75-4215-BEE7-97E9114AD9CD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorStateManagement.Web", "BlazorStateManagement.Web\BlazorStateManagement.Web\BlazorStateManagement.Web.csproj", "{9F5A77A7-9361-4B58-9658-DE56E8393BD3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorStateManagement.Web.Client", "BlazorStateManagement.Web\BlazorStateManagement.Web.Client\BlazorStateManagement.Web.Client.csproj", "{2C10CA9E-D940-462B-8770-55AE0424CBCC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2E0AE021-6B50-444B-9638-1CD7BC321B14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E0AE021-6B50-444B-9638-1CD7BC321B14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E0AE021-6B50-444B-9638-1CD7BC321B14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E0AE021-6B50-444B-9638-1CD7BC321B14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C835EDC-8802-4156-833F-79BCA102C99C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C835EDC-8802-4156-833F-79BCA102C99C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C835EDC-8802-4156-833F-79BCA102C99C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C835EDC-8802-4156-833F-79BCA102C99C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1734131-3B75-4215-BEE7-97E9114AD9CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1734131-3B75-4215-BEE7-97E9114AD9CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1734131-3B75-4215-BEE7-97E9114AD9CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1734131-3B75-4215-BEE7-97E9114AD9CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F5A77A7-9361-4B58-9658-DE56E8393BD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F5A77A7-9361-4B58-9658-DE56E8393BD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F5A77A7-9361-4B58-9658-DE56E8393BD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F5A77A7-9361-4B58-9658-DE56E8393BD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C10CA9E-D940-462B-8770-55AE0424CBCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C10CA9E-D940-462B-8770-55AE0424CBCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C10CA9E-D940-462B-8770-55AE0424CBCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C10CA9E-D940-462B-8770-55AE0424CBCC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2E0AE021-6B50-444B-9638-1CD7BC321B14} = {AA339D9E-3D55-468E-A8F5-B52B4CC2C2A6}
+		{6C835EDC-8802-4156-833F-79BCA102C99C} = {8CC55CDA-49EB-428C-A5E1-89DF8E210E4C}
+		{D1734131-3B75-4215-BEE7-97E9114AD9CD} = {058E6899-929B-49DA-B3FD-707077E8C6A6}
+		{9F5A77A7-9361-4B58-9658-DE56E8393BD3} = {058E6899-929B-49DA-B3FD-707077E8C6A6}
+		{2C10CA9E-D940-462B-8770-55AE0424CBCC} = {058E6899-929B-49DA-B3FD-707077E8C6A6}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {78BBA74E-4C48-4ED1-A2E1-B340E9CB6259}
+	EndGlobalSection
+EndGlobal
